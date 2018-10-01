@@ -1,5 +1,5 @@
-def binaryDeleteSmallerThan(n, currentList, lenList):
-    #lenList = len(currentList)
+def binaryDeleteSmallerThan(n, currentList):
+    lenList = len(currentList)
     l = 0
     r = lenList - 1
     i = r//2
@@ -16,7 +16,6 @@ def binaryDeleteSmallerThan(n, currentList, lenList):
     else:
         while(currentList[i]!=n):
             #print(l, r, i, currentList)
-            print("While", l, i, r, currentList[i], n)
             if l==r:
                 break
             if l==r-1 and currentList[l]>n>currentList[r]:
@@ -27,14 +26,13 @@ def binaryDeleteSmallerThan(n, currentList, lenList):
             elif currentList[i] > n:
                 l = i
                 i = i + (r-l)//2
-        #print(currentList[i])
         return currentList[:i]
 
 #sList = [3]
 #print(binaryDeleteSmallerThan(3, sList))
 
 f = open('ceremony-sub5-attempt0.txt', 'r')
-fOutput = open('task2_5.txt','w')
+fOutput = open('task2_5_2.txt','w')
 
 T = int(f.readline())
 
@@ -53,23 +51,19 @@ for i in range(T):
         continue
     leftList = list()
     rightList = list()
-    lLeft = 0
-    lRight = 0
     m = 0
     for j in range(1,N):
-        if lLeft > 0:
-            leftList = binaryDeleteSmallerThan(houses[j-1], leftList, lLeft)
+        if len(leftList) > 0:
+            leftList = binaryDeleteSmallerThan(houses[j-1], leftList)
         leftList.append(houses[j-1])
-        lLeft = len(leftList)
-        amount[j] = lLeft
+        amount[j] = len(leftList)
         #amount[j][0] = len(leftList)
         #print(houses[j], leftList)
     for j in range(2,N):
-        if lRight > 0:
-            rightList = binaryDeleteSmallerThan(houses[-j+1], rightList, lRight)
+        if len(rightList) > 0:
+            rightList = binaryDeleteSmallerThan(houses[-j+1], rightList)
         rightList.append(houses[-j+1])
-        lRight = len(rightList)
-        amount[-j] += lRight
+        amount[-j] += len(rightList)
         #amount[-j][1] += len(rightList)
         if amount[-j] > m:
             m = amount[-j]
