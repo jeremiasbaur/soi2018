@@ -13,6 +13,8 @@ def binaryDeleteSmallerThan(n, currentList):
         return currentList
     elif n == currentList[-1]:
         return list()
+    elif n>= currentList[0]:
+        return list()
     else:
         while(currentList[i]!=n):
             #print(l, r, i, currentList)

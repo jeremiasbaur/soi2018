@@ -2,7 +2,7 @@ def binaryDeleteSmallerThan(n, currentList, lenList):
     #lenList = len(currentList)
     l = 0
     r = lenList - 1
-    i = r//2
+    i = (l+r)//2
 
     if lenList==1:
         if n < currentList[-1]:
@@ -11,27 +11,25 @@ def binaryDeleteSmallerThan(n, currentList, lenList):
             return list()
     if n < currentList[-1]:
         return currentList
-    elif n == currentList[-1]:
-        return list()
+    #elif n == currentList[-1]:
+    #    return list()
     else:
         while(currentList[i]!=n):
             #print(l, r, i, currentList)
-            print("While", l, i, r, currentList[i], n)
-            if l==r:
-                break
-            if l==r-1 and currentList[l]>n>currentList[r]:
+            #print("While", l, i, r, currentList[i], n)
+            if l>=r:# and currentList[l]>n>currentList[r]:
                 return currentList[:r]
             if currentList[i] < n:
-                r = i
-                i = l + (r-l)//2
+                r = i-1
+                i = (l+r)//2
             elif currentList[i] > n:
-                l = i
-                i = i + (r-l)//2
+                l = i+1
+                i = (l+r)//2
         #print(currentList[i])
         return currentList[:i]
 
-#sList = [3]
-#print(binaryDeleteSmallerThan(3, sList))
+sList = [19,18,13,10,7,5,4,3,1]
+print(binaryDeleteSmallerThan(19, sList, len(sList)))
 
 f = open('ceremony-sub5-attempt0.txt', 'r')
 fOutput = open('task2_5.txt','w')
