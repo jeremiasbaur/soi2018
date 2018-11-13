@@ -70,3 +70,9 @@ fabric.properties
 .idea/misc.xml
 .idea/soi2018.iml
 .idea/soi2018.iml
+misc.xml
+
+.idea/misc.xml
+*.xml
+*.iml
+*.xml
