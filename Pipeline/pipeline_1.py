@@ -1,4 +1,4 @@
-f = open('pipeline-sub0-attempt0.txt', 'r')
+f = open('pipeline-sub1-attempt5.txt', 'r')
 f_output = open('task3_1.txt', 'w')
 
 testcases = int(f.readline())
@@ -33,7 +33,7 @@ for i in range(testcases):
     pump_true[j-1][0] = True
     pump_true[0][0] = True
 
-    if impossible or i ==90:
+    if impossible:
         output = "Impossible"
     else:
         output = ""
@@ -44,7 +44,7 @@ for i in range(testcases):
                 required_count+=1
         output = str(required_count) + " " + output
         if required_count > 9000:
-            output = "9001"
+            output = required_count
 
     print('Case #%d: %s' %(i, output))
     f_output.write('Case #%d: %s\n' %(i, output))
