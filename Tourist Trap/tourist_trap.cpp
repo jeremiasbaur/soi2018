@@ -3,6 +3,7 @@ using namespace std;
 #define FOR(i,m) for(int i = 0; i < m; i ++)
 
 struct street{
+  int x, y, width, height, node_id, friend_id;
 
   bool operator<(const street& a) const{
     if (x == a.x){
