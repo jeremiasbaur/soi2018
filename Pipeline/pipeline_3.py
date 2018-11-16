@@ -6,11 +6,13 @@ testcases = int(f.readline())
 for i in range(testcases):
     pumps_count, ltc = map(int, f.readline().split())
     pump_stations = list(map(int, f.readline().split()))
-    pump_true = [[False, pump_stations[j]] for j in range(pumps_count)]
 
     output = 'Case #%d: ' %(i)
 
+
     for k in range(1,ltc+1):
+        pump_true = [[False, pump_stations[j]] for j in range(pumps_count)]
+        last = False
         j = 1
         impossible = False
         looking_from = 0
@@ -26,17 +28,24 @@ for i in range(testcases):
                 pump_true[j][0], pump_true[looking_from][0] = True, True
                 pump_amount += 1
                 looking_from = j
+                if j == pumps_count-1:
+                    last = True
             elif pump_stations[j]-pump_stations[looking_from] > k:
                 pump_true[looking_from][0], pump_true[j-1][0] = True, True
                 pump_amount += 1
                 looking_from = j-1
+                if j == pumps_count-1:
+                    last = True
             j += 1
+
+        if not last:
+            pump_amount += 1
 
         pump_true[-1][0] = True
         c = 0
         for l in pump_true:
             if l[0]:
-                c +=1
+                c += 1
 
         #if not impossible and not pump_true[-1][0]: pump_amount += 1
         if not impossible:
