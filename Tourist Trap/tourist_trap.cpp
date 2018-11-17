@@ -32,10 +32,10 @@ street create_street(int x, int y, int width, int height, int node_id){
   return new_street;
 }
 
-multimap<int, pair<int,int>> insert_rectangle(multimap<int, pair<int,int>>& interval_tree, street& street_to_insert){
+void insert_rectangle(multimap<int, pair<int,int>>& interval_tree, street& street_to_insert){
   interval_tree.insert(make_pair(street_to_insert.y + street_to_insert.height, make_pair(street_to_insert.node_id, 0)));
   interval_tree.insert(make_pair(street_to_insert.y, make_pair(street_to_insert.node_id, 1)));
-  return interval_tree;
+  //return interval_tree;
 }
 
 multimap<int, pair<int,int>> delete_rectangle(multimap<int, pair<int,int>>& interval_tree, street& street_to_delete){
@@ -70,6 +70,11 @@ multimap<int, pair<int,int>> delete_rectangle(multimap<int, pair<int,int>>& inte
 
 void overlaping_rectangles(multimap<int, pair<int,int>>& interval_tree, street& street_to_look, vector<street>& streets){
   for(multimap<int, pair<int,int>>::iterator it=interval_tree.lower_bound(street_to_look.y); it!=interval_tree.upper_bound(street_to_look.y+street_to_look.height); ++it){
+    street& iterator_street = streets[it->second.first];
+    int x,y;
+    if (iterator_street.x > street_to_look.x + street_to_look.width || street_to_look.x > iterator_street.x+iterator_street.width+1){
+
+    }
     street_to_look.overlaps.insert(it->second.first);
     streets[it->second.first].overlaps.insert(street_to_look.node_id);
   }
@@ -91,58 +96,53 @@ int main(){
       current_street.node_id = j;
       streets.push_back(current_street);
       sorted_streets_start.insert(make_pair(current_street.x, current_street));
-      sorted_streets_end.insert(make_pair(current_street.x+current_street.width+1, current_street));
+      sorted_streets_end.insert(make_pair(current_street.x+current_street.width  , current_street));
     }
-
-    //sort(sorted_streets_start.begin(), sorted_streets_start.end());
-    //sort(sorted_streets_end.begin(), sorted_streets_end.end(), end_x());
 
     multimap<int,street> active_rectangle_set;
 
     multimap<int, pair<int,int>> interval_tree; // y value as key, pair(index, y_top -> 0 / y_bot -> 1)
-    /*street test_street1 = create_street(0, 1, 1, 4, 0);
-    street test_street2 = create_street(0, 3, 1, 5, 1);
-    street test_street3 = create_street(0, 1, 1, 4, 3);
-    interval_tree = insert_rectangle(interval_tree, test_street1);
-    interval_tree = insert_rectangle(interval_tree, test_street2);
-    interval_tree = insert_rectangle(interval_tree, test_street3);
-
-    interval_tree = delete_rectangle(interval_tree, test_street1);
-    for(multimap<int, pair<int,int>>::iterator it=interval_tree.lower_bound(1); it!=interval_tree.upper_bound(10); ++it){
-      cout << it->first << " => " << it->second.first << '\n';
-    }*/
 
     int x = 0;
     int last = 0;
-    while (sorted_streets_start.lower_bound(x)!=sorted_streets_start.end()){
-      auto it_value = sorted_streets_start.lower_bound(x);
-      int current_x = it_value->first;
-      x = it_value->first +1;
-      auto it_at_value = sorted_streets_start.equal_range(current_x);
-      //cout << i << "fa " << current_x << "\n";
-      for(auto& it = it_at_value.first; it != it_at_value.second; ++it){
-        interval_tree = insert_rectangle(interval_tree, streets[it->second.node_id]);
-        overlaping_rectangles(interval_tree, streets[it->second.node_id], streets);
-      }
-      for(auto const& it : interval_tree){
-        cout << it.second.first << " ";
-      }
-      cout << "\nnew step ";
-      while (sorted_streets_end.lower_bound(last)!=sorted_streets_end.upper_bound(x)){
+    while (sorted_streets_start.lower_bound(x)!=sorted_streets_start.end()){ // iterator through whole start events
+      auto it_value = sorted_streets_start.lower_bound(x); // get iterator at with current x key
+      int current_x = it_value->first; // get current x
+      x = it_value->first +1; // next x is current x + 1
+
+      while (sorted_streets_end.lower_bound(last)!=sorted_streets_end.upper_bound(x-1)){
         auto it_value_end = sorted_streets_end.lower_bound(last);
         int current_end_x = it_value_end->first;
-        if (current_end_x <= x){
+        if (current_end_x <= x-1){
           auto it_at_end_value = sorted_streets_end.equal_range(current_end_x);
           for(auto& it = it_at_end_value.first; it != it_at_end_value.second; ++it){
             interval_tree = delete_rectangle(interval_tree, streets[it->second.node_id]);
+            cout << "deleted " << it->second.node_id << " at " << x-1 << "\n";
           }
         }
         last = it_value_end->first +1;
       }
-      for(auto const& it : interval_tree){
-        cout << it.second.first << " ";
+
+      auto it_at_value = sorted_streets_start.equal_range(current_x); // get iterator for elements with current x key
+
+      for(auto& it = it_at_value.first; it != it_at_value.second; ++it){ // iterate through elements with current x key
+        insert_rectangle(interval_tree, streets[it->second.node_id]); // insert them in interval_tree
+        overlaping_rectangles(interval_tree, streets[it->second.node_id], streets); // look for overlaps
+        cout << "inserted " << it->second.node_id << " at " << x-1 << "\n";
       }
-      cout << "\nnew step after delete ";
+
+      while (sorted_streets_end.lower_bound(last)!=sorted_streets_end.upper_bound(x-1)){
+        auto it_value_end = sorted_streets_end.lower_bound(last);
+        int current_end_x = it_value_end->first;
+        if (current_end_x < x){
+          auto it_at_end_value = sorted_streets_end.equal_range(current_end_x);
+          for(auto& it = it_at_end_value.first; it != it_at_end_value.second; ++it){
+            interval_tree = delete_rectangle(interval_tree, streets[it->second.node_id]);
+            cout << "deleted " << it->second.node_id << " at " << x-1 << "\n";
+          }
+        }
+        last = it_value_end->first +1;
+      }
     }
     FOR(j, count_streets){
       cout << "street " << j << " is connected with: ";
