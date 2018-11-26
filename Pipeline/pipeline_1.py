@@ -9,7 +9,6 @@ for i in range(testcases):
     pump_true = [[False, pump_stations[j]] for j in range(pumps_count)]
     impossible = False
 
-
     """if i == 90:
         j = 1
         print(ltc)
