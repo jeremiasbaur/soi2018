@@ -1,5 +1,3 @@
-from collections import deque
-
 f = open('storytelling-sub2-attempt0.txt', 'r')
 f_output = open('task5_2.txt', 'w')
 
