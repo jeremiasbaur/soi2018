@@ -19,11 +19,17 @@ signed main(){
     }
   }
 
-  vector<vector<in>> ps_rec = vector<vector<in>> (height+1, vector<in>(width+1,0));
+  //vector<vector<in>> ps_rec = vector<vector<in>> (height+1, vector<in>(width+1,0));
+  vector<vector<in>> ps_rec = vector<vector<in>>();
+  ps_rec.push_back(vector<in>(width+1,0));
 
   for(in i = 1; i < height+1 ; i++){
+    ps_rec.push_back(vector<in>());
+    ps_rec[i].push_back(0);
     for(in j = 1; j < width+1 ; j++){
-      ps_rec[i][j] = ps_rec[i-1][j] + ps_rec[i][j-1] - ps_rec[i-1][j-1] + rectangle[i-1][j-1];
+      //ps_rec[i][j] = ps_rec[i-1][j] + ps_rec[i][j-1] - ps_rec[i-1][j-1] + rectangle[i-1][j-1];
+      ps_rec[i].push_back(ps_rec[i-1][j] + ps_rec[i][j-1] - ps_rec[i-1][j-1] + rectangle[i-1][j-1]);
+
     }
   }
 

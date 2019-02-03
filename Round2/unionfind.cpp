@@ -8,7 +8,8 @@ in find(vector<pair<in,in>>& graph, in a){
   if (a == graph[a].second){
     return a;
   }
-  return find(graph, graph[a].second);
+  graph[a].second = find(graph, graph[a].second);
+  return graph[a].second;
 }
 
 void unite(vector<pair<in,in>>& graph, in a, in b, bool time){
@@ -16,8 +17,16 @@ void unite(vector<pair<in,in>>& graph, in a, in b, bool time){
   a_p = find(graph, a);
   b_p = find(graph, b);
   if (time){
-    a > b ? graph[a].second = b_p : graph[b].second = a_p;
-  } else{
+    if (a>b){
+      graph[a_p].second = b_p;
+      graph[a].second = b_p;
+    }
+    else{
+      graph[b_p].second = a_p;
+      graph[b].second = a_p;
+    }
+  } else {
+    graph[b_p].second = a_p;
     graph[b].second = a_p;
   }
 }
@@ -37,6 +46,7 @@ signed main(){
     cin >> a;
     if (a==-1){
       FOR(j, lands){
+        find(graph, j);
         cout << graph[j].second+1 << " ";
       }
       cout << "\n";
