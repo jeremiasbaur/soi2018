@@ -48,14 +48,17 @@ int get_max(vector<int>& segtree, int node, int left, int right, int range_left,
 }
 
 signed main(){
+  ios_base::sync_with_stdio(false);
+  cin.tie(0);
+
   int numbers, queries;
   cin >> numbers >> queries;
 
-  vector<int> n_array = vector<int>();
+  vector<int> n_array = vector<int>(numbers,0);
   FOR(i, numbers){
     int number;
     cin >> number;
-    n_array.push_back(number);
+    n_array[i] = number;
   }
 
   vector<int> segtree = vector<int>(4*numbers,0);
@@ -66,6 +69,7 @@ signed main(){
   }
   cout << "\n";
   */
+
   FOR(i, queries){
     string type; int a,b;
     cin >> type >> a >> b;
