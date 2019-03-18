@@ -64,12 +64,6 @@ signed main(){
   vector<int> segtree = vector<int>(4*numbers,0);
   build(segtree, n_array, 1, 0, numbers-1);
 
-  /*FOR(i, 4*numbers){
-    cout << segtree[i] << " ";
-  }
-  cout << "\n";
-  */
-
   FOR(i, queries){
     string type; int a,b;
     cin >> type >> a >> b;
